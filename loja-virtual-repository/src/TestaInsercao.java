@@ -13,21 +13,31 @@ public class TestaInsercao {
 		Connection connection = factory.recuperarConexao();
 		connection.setAutoCommit(false);
 
-		String sql = "INSERT INTO PRODUTO (nome, descricao) Values (?, ?)";
+		try {
 
-		PreparedStatement stm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			String sql = "INSERT INTO PRODUTO (nome, descricao) Values (?, ?)";
 
-		adicionaVariavel("Tv Smart", "32 Polegadas", stm);
-		adicionaVariavel("Radio", "a pilha", stm);
+			PreparedStatement stm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			adicionaVariavel("Tv Smart", "32 Polegadas", stm);
+			adicionaVariavel("Radio", "a pilha", stm);
+			
+			stm.close();
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ROLLBACK EXECUTADO");
+			connection.rollback();
+		}
 	}
 
 	private static void adicionaVariavel(String nome, String descricao, PreparedStatement stm) throws SQLException {
 		stm.setString(1, nome);
 		stm.setString(2, descricao);
 
-//		if (nome.equals("Radio")) {
-//			throw new RuntimeException("Não foi possivel adicionar o produto");
-//		}
+		if (nome.equals("Radio")) {
+			throw new RuntimeException("Não foi possivel adicionar o produto");
+		}
 
 		stm.execute();
 

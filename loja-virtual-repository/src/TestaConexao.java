@@ -5,9 +5,7 @@ import java.sql.SQLException;
 public class TestaConexao {
 
 	public static void main(String[] args) throws SQLException {
-		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://localhost/loja_virtual?useTimeZone=true&serverTimeZone=UTC", "root", "root");
-
+		Connection connection = new ConnectionFactory().recuperarConexao();
 		System.out.println("Fechando a conexão!");
 		connection.close();
 	}

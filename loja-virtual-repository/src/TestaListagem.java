@@ -14,7 +14,7 @@ public class TestaListagem {
 		ResultSet result = stm.getResultSet();
 		
 		while(result.next()) {
-			Integer id = result.getInt("ID");
+			int id = result.getInt("ID");
 			System.out.println(id);
 			String nome = result.getString("NOME");
 			System.out.println(nome);

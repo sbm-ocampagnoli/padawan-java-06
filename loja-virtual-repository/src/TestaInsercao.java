@@ -10,24 +10,20 @@ public class TestaInsercao {
 
 		ConnectionFactory factory = new ConnectionFactory();
 
-		Connection connection = factory.recuperarConexao();
-		connection.setAutoCommit(false);
-
-		try {
+		try (Connection connection = factory.recuperarConexao()) {
 
 			String sql = "INSERT INTO PRODUTO (nome, descricao) Values (?, ?)";
 
-			PreparedStatement stm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			try (PreparedStatement stm = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-			adicionaVariavel("Tv Smart", "32 Polegadas", stm);
-			adicionaVariavel("Radio", "a pilha", stm);
-			
-			stm.close();
-			connection.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ROLLBACK EXECUTADO");
-			connection.rollback();
+				adicionaVariavel("Tv Smart", "32 Polegadas", stm);
+				adicionaVariavel("Radio", "a pilha", stm);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ROLLBACK EXECUTADO");
+				connection.rollback();
+			}
 		}
 	}
 
@@ -41,11 +37,12 @@ public class TestaInsercao {
 
 		stm.execute();
 
-		ResultSet rst = stm.getGeneratedKeys();
+		try (ResultSet rst = stm.getGeneratedKeys()) {
 
-		while (rst.next()) {
-			int id = rst.getInt(1);
-			System.out.println("O id criado foi: " + id);
+			while (rst.next()) {
+				int id = rst.getInt(1);
+				System.out.println("O id criado foi: " + id);
+			}
 		}
 	}
 

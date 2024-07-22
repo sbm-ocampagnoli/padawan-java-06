@@ -8,6 +8,10 @@ public class Categoria {
 		super();
 		this.nome = nome;
 	}
+	
+	public Integer getId() {
+		return id;
+	}
 
 	public Categoria(Integer id, String nome) {
 		super();

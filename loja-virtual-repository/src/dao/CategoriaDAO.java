@@ -66,15 +66,16 @@ public class CategoriaDAO {
 			pstm.execute();
 
 			try (ResultSet rst = pstm.getResultSet()) {
-				if (ultima == null || !ultima.getNome().equals(rst.getString(2))) {
-					while (rst.next()) {
+				while (rst.next()) {
+					if (ultima == null || !ultima.getNome().equals(rst.getString(2))) {
 						Categoria categoria = new Categoria(rst.getInt(1), rst.getString(2));
 						ultima = categoria;
 						categorias.add(categoria);
 					}
+					Produto produto = new Produto(rst.getInt(3), rst.getString(4), rst.getString(5));
+					ultima.adicionar(produto);
 				}
-//				Produto produto = new Produto(rst.getInt(3), rst.getString(4), rst.getString(5));
-//				ultima.adicionar(produto);
+
 			}
 		}
 		return categorias;
